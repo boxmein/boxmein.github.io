@@ -1,0 +1,52 @@
+--- 
+layout: post 
+title: 2014 
+---
+
+So as it's obviously 2014 already I suppose writing here should be a good
+option.
+
+During which I obviously spent time writing code instead of doing anything
+_productive_, and as such, here's [a firework generating
+site](http://boxmein.mniip.com/etc/fireworks.html) which you can click upon
+other things.
+
+It also has some extra features which require the user to actually _type_
+things. I've disabled these by default since they come with side effects that
+might not be desirable.
+
+### The trails
+
+The first of which is having trails. Chrome does some kind of transparency
+magic in so that it lowering the transparency of a rectangle drawn over the
+screen as a refresh will not in fact entirely erase the trails, thus leaving 
+gray blotches in places where there used to be drawn particles. 
+
+It's an unfortunate side effect of not implementing an entirely new alpha 
+blending function aside the usual render loop. I actually did try that, but it
+slowed down rendering noticeably and made the whole thing feel sluggish. It
+might have also been my code. One may never know.
+
+### The other laggy feature
+
+The second laggy 'feature', if one might call it that, was that during the 
+development process, at some point I discovered that the firework "explosion"
+particles explode as well as the firework "projectile" particles, thus creating
+a lot of explosion particles in a short amount of time, exponentially increasing 
+in numbers, all the while slowing down literally everything.
+
+Just as a feature I left it in even if one does need to type to access it. 
+
+### London in the background
+
+My next obvious thought was to add images. So now one can append "image=..."
+onto the hash at the end of its URL to load an image and draw it to clear the 
+screen instead of pitch black.
+
+[Here's your London.](http://boxmein.mniip.com/etc/fireworks.html#image=http://www.hdwallpapers.in/walls/london_at_night-wide.jpg)
+
+
+...But all this you could've read already in the little dim gray text on the
+left upper corner of the fireworks screen.
+
+Happy New Year.
