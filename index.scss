@@ -1,0 +1,80 @@
+//
+//# sass index.scss index.css
+$fg: black;
+$bg: white;
+
+$muted1: #666;
+$muted2: #AAA;
+
+$font: "Georgia", serif;
+$fontsize: 12px;
+$width: 400px;
+
+$h1before: "# ";
+$h2before: "## ";
+$ul1before: "- ";
+$ul2before: "> ";
+
+body {
+  max-width: $width;
+  margin: 0 auto;
+  font-family: $font;
+  font-size: $fontsize;
+
+  background-color: $bg;
+  color: $fg;
+}
+h1 {
+  font-size: 1.5em;
+  font-weight: normal;
+  &:before { content: $h1before; }
+}
+h2 {
+  font-size: 1.2em;
+  font-weight: normal;
+  &:before { content: $h2before; }
+}
+a {
+  color: $fg;
+}
+ul {
+  padding: 0;
+  list-style-type: none;
+  
+  & > li:before {
+    content: $ul1before;
+  }
+  
+  ul {
+    padding-bottom: 5px;
+    & > li {
+      padding-left: 15px;
+      &:before { content: $ul2before; }
+    }
+  }
+
+  &.languages {
+    position: relative;
+    padding: 0;
+    // flexy stuff
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    flex-wrap: wrap; 
+
+    li {
+      width: 33%;
+      flex: auto;
+      -webkit-flex: auto;
+    }
+  }
+
+  &.repositories {
+    li { margin-bottom: 0.25em; }
+  }
+}
+li {
+  &.muted { color: $muted1; }
+  &.supermuted { color: $muted2; }
+}
+
