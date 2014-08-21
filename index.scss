@@ -12,6 +12,7 @@ $width: 400px;
 
 $h1before: "# ";
 $h2before: "## ";
+$h3before: "### ";
 $ul1before: "- ";
 $ul2before: "> ";
 
@@ -34,6 +35,11 @@ h2 {
   font-weight: normal;
   &:before { content: $h2before; }
 }
+h3 {
+  font-size: 1em;
+  font-weight: normal;
+  &:before { content: $h3before; }
+}
 a {
   color: $fg;
 }
@@ -53,7 +59,7 @@ ul {
     }
   }
 
-  &.languages {
+  &.floaty {
     position: relative;
     padding: 0;
     // flexy stuff
