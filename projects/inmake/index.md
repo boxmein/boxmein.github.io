@@ -1,107 +1,126 @@
+inmake.rb
+=========
+<a name="about"></a>
+A command-line tool to sorta replace Makefiles, and to make my using Sublime 
+Text's build features a slight bit simpler. It runs on source code files, 
+looking for a code comment that might be considered the build command for this 
+file. Then, it runs the command in the shell via system().
 
-# About
+For further purposes, the build command / code comment is called a build
+string. 
 
-I wrote this because I didn't like having to remember the build command for
-every source file I wrote. Then I kind of made it into a Sublime plugin to beat 
-all Sublime plugins. ...and then into an entire command-line tool.
+Modes
+-----
 
-# Usage
+The program can run in different 'modes' where the way it looks for the build
+string slightly vary. For example, in **prefix mode**, you can specify a 
+sequence to be searched for in the *start* of the string, and in **postfix 
+mode** you can specify a search for the *end* of the string. In both these 
+modes, the found string is cut off before the command is executed.
 
-There's, like, 4 ways of using this tool.
-
-### Like a shebang line
-
-You know how your python scripts already have two copy/pasted lines at the start of each script that go like `#!/usr/bin/python` and `# -*- encoding: utf-8 -*-`? Well, why not add another one! The third (or second) line can now be used as a command prefix! Prepend some amount of non-whitespace characters to mark it off as a comment and this script will cut it right off. An example Python script would look like that one down there:
+For example:
 
 ``` python
 #!/usr/bin/python3
-# -*- encoding: utf-8
-# weird-python-compiler pythonfile.py -o out.html
+print "hello, this is code"
+#| weird-python-compiler pythonfile.py -o out.css
+# inmake command line:
+# ruby inmake.rb -f ~/pythonfile.py -p "#|"
 ```
-
-### Command prefix
-
-You can also manually say what kind of prefix the command has, so the script will find the line for you. Once it's found the prefix is snipped from the start and the results run via `system`.
-
-``` ruby
-rx = /^\s*#{options[:prefix]}\s*/
-command = f.each_line.detect do |line|
-  rx.match line
-end
-abort "No line with that prefix!" unless command
-command.gsub!(rx, '')
-```
-
-That's all it takes to implement! You can put it to good use with a comment like
 
 ``` c
-//# gcc -o test test.c
+#include <stdio.h>
+// gcc -o cfile.out cfile.c look_here_im_the_build_string
+int main() { 
+  printf("hello dude");
+}
+// inmake command line: 
+// ruby inmake.rb -f ~/cfile.c -m "look_here_im_the_build_string"
 ```
 
-... coupled with the command
+There's also **default mode**, which uses the second code line as the shell 
+command (while also stripping leading non-whitespace, followed by whitespace).
+*As an exception*, when the second line is used to specify encoding (for example
+in Python scripts where the first line is the shebang line), the third line 
+will be used instead.
 
-``` bash
-ruby inmake.rb -f test.c -p "//#"
+**Note: you don't need to distinguish your build string in default mode!**
+
+``` jade
+// 
+   jade index.jade
+extends layout
+
+block text
+  include:md index.md
 ```
 
-### Command suffix (postfix)
+The last running mode is for the advanced user, and it lets you specify your 
+very own **regular expression**, so you can search for whatever you like. 
+You'll also have the option of removing the matches from the build string 
+before running.
 
-You can also specify a postfix that you can append to the end of the line, also searched for and snipped like the prefix. 
-
-In this case however, the program also walks right until the first whitespace character to cut off any comment characters you might've stashed there. Useful to leave impromptuwhitespacelessnotes.
-
-``` ruby
-rx = /#{opts[:postfix]}\s*$/
-command = f.each_line.detect do |line|
-  rx.match line
-end
-abort "No line with that postfix!" unless command
-command.gsub!(rx, '')
-command = command[(command =~ /\s/)...command.length].strip
+``` python
+#!/usr/bin/python3
+# !!!weird-python-compiler!!! !!!pythonfile.py!!! !!!-o!!! !!!out.html!!!
+print "hello"
+# inmake line: 
+# ruby inmake.rb -f ~/pythonfile.py -r "!!!" --strip-matched
 ```
 
-This also looks simple, because it is. You can employ it with comments such as 
+
+Variables
+---------
+
+Aside from different run modes, you can specify key-value pairs that will be
+used as 'variables' inside the build string. For example, by passing
+`-a AWESOME=1` to inmake, you can use `{{AWESOME}}` inside the build string,
+which will be replaced with `1` for every occurrence.
+
+There are also some default variables: 
+
+`{{f}}` is the full filename passed into inmake.  
+`{{bn}}` is that file's base name. (the filename without leading directories)  
+`{{dn}}` is that file's directory name. (just the directory)
 
 ``` c
-//remembertogetsomemilkfromthestore gcc -o test test.c moo
-``` 
-
-... eternally bound to the command
-
-``` bash
-ruby inmake.rb -f test.c -m moo
+// lookie here, a C file!
+// gcc -o {{bn}}.exe {{f}} -mwindows -std=c99
+#include <windows.h>
+LRESULT WINAPI WinMain( ...
 ```
 
-### Regexing
+Usage
+-----
 
-For the extremely brave and the unwieldily apt, there's also a way to specify your own regular expression! It's got to be of a flavor Ruby supports, which means it's 99% certainly Perl-compatible regex. Also, skip the surrounding slashes, we've got enough of them inside the code anyway. Thing is, there's no way *yet* to set any flags for the regex, so you'll get none.
+``` plain
+ruby $0 [options...],
+  where options are:
 
-``` ruby
-rx = opts[:regex]
-command = f.each_line.detect do |line|
-rx.match line
-end
-abort "Regex didn't match any lines!" unless command
-command = command[(command =~ /\s/)...command.length].strip
-command.gsub!(rx, '') if opts[:sm]
-``` 
+  -f FILE, --file FILE
+          Specify the file in which the build string is found
+  
+  -p PREFIX, --prefix PREFIX
+          Specify the build string's prefix.
 
-Okay so as you see there's a regex option, but what's that `:sm` option? 
-That's to tell the script to cut your newly-matched snippets off as well as finding them. You can set that flag on the command line with the `--strip-matched` option.
+  -m POSTFIX, --postfix POSTFIX
+          Specify the build string's postfix.
 
-Use regexes with any type of comment you can match to (for example:
+  -r REGEX, --regex REGEX
+          Specify a regex to match the build string.
 
-``` c
-// g~c~c -~o t~e~s~t t~e~s~t~.~c -DAWESOME=~1
-``` 
+  --[no-]strip-matched
+          Strip regex matches (-r) from the build string.
 
-) and matching with: 
+  -a KEY=VALUE, --add KEY=VALUE
+          Add key/value pairs to variables.
 
-``` bash
-ruby inmake.rb -f test.c -r "~" --strip-matched
-``` 
+  --no-vars
+          Disable all variables.
 
-The stripping will always substitute every match on the line, since `String#gsub!` is used for the process.
+  --list-vars
+          Print currently defined variables, and exit.
+```
 
 <a name="sublime"></a>
 # Sublime Text build script
@@ -121,54 +140,4 @@ with where your script resides in.
 The source code will always just be accessible [here][gist]. 
 
 [gist]: https://gist.github.com/boxmein/8303778
-
-
-# Examples
-
-The simplest way to use inmake is to not specify any other flags and let it use
-line 2 of the source code as your shell command. For example, 
-
-``` c
-// A simple hello-world script.
-// gcc -o test test.c -DAWESOME=1
-// (ruby inmake.rb -f test.c)
-#include <stdio.h>
-int main() {
-    printf("Hello world!\n");
-
-    if (AWESOME){
-        printf("awesome!\n");
-    }
-}
-```
-
-You can use the post-fix mode like this:
-
-``` c
-// gcc -o test test.c -DAWESOME=1 thisisapostfix
-// (ruby inmake.rb -f test.c -m 'thisisapostfix')
-#include <stdio.h>
-int main() {
-    printf("Hello world!\n");
-
-    if (AWESOME){
-        printf("awesome!\n");
-    }
-}
-``` 
-
-And you can use the regex mode like this: 
-
-``` c
-// !!!!! gcc -o test test.c -DAWESOME=1 !!!!!
-// (ruby inmake.rb -f test.c -r '^!!!!!|!!!!!$' --strip-matched)
-int main() {
-    printf("Hello world!\n");
-    if (AWESOME){
-        printf("awesome!\n");
-    }
-}
-```
-
-..This pretty much covers examples.
 
