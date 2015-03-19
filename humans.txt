@@ -1,0 +1,15 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    boxmein -- everything -- @boxmein1
+
+# THANKS
+
+    
+
+# TECHNOLOGY COLOPHON
+
+    CSS3, HTML5
+    nginx, jQuery, Modernizr, Normalize.css
