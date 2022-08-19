@@ -1,0 +1,4 @@
+baseURL = "https://boxmein.github.io/"
+languageCode = "en-us"
+title = "boxmein"
+theme = "ananke"
