@@ -1,4 +1,9 @@
 baseURL = "https://boxmein.github.io/"
 languageCode = "en-us"
 title = "boxmein"
-theme = "ananke"
+theme = "archie"
+
+[params]
+customJS = [
+  "posthog-tag.js"
+]
