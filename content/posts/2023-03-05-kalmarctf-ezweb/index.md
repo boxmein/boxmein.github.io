@@ -3,8 +3,7 @@ title: "KalmarCTF 2023 - EZ Web - Writeup"
 date: "2023-03-05"
 ---
 
-I participated in KalmarCTF as part of team Kassipojad :cat2:. One of the best
-CTFs I've ever played!!
+I participated in KalmarCTF as part of team Kassipojad :cat2:. One of the best CTFs I've ever played!!
 
 Here's a writeup of the EZ Web task, or rather a dump of the notes I took:
 
@@ -14,12 +13,10 @@ Here's a writeup of the EZ Web task, or rather a dump of the notes I took:
 * https://php.caddy.chal-kalmarc.tf/flag.txt
 * https://php.caddy.chal-kalmarc.tf/index.php
 * https://static.caddy.chal-kalmarc.tf/logo_round.svg
-
 * Source is included 
 * compose file includes some backup step
 * Backups folder includes the host
   * `cp -r *.caddy.chal-kalmarc.tf backups/ && rm php.caddy.chal-kalmarc.tf/flag.txt && sleep 1 && caddy run`
-
 * Can use slashes in host
 * Caddy v1 has an admin API on a separate port
 * Caddy matchers (`respond /flag.txt`) don't run `path.Clean()`

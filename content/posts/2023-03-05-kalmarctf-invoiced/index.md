@@ -6,6 +6,7 @@ date: "2023-03-05"
 ## Final working payload
 
 Name: `a</title><meta http-equiv="Refresh" content="0; url='http://127.0.0.1:5000/orders'" />`
+
 Others: empty 
 
 ## What we know
@@ -21,7 +22,6 @@ Others: empty
     * GET /renderInvoice => replace variables in template 
       * URL parameters are rendered without escaping => XSS 
     * GET /orders => return flag 
-
 * Find unique safety features:
   * /renderInvoice has:
     * CSP  

@@ -3,14 +3,14 @@ title: "KalmarCTF 2023 - kalmarunionen-fun - Writeup"
 date: "2023-03-05"
 ---
 
-
 ## Learnings
 
 * Don't overthink it - we were about to cross reference Harry Potter spells
 * Keep your old code around - my renderer was [based on a 2014 project](https://github.com/boxmein/website/blob/master/experiments/point-cloud/index.html) which really sped up the prototyping
+* Live for this moment: 
 
 
-* Live for this moment:
+
 ![](./discord-cap.png)
 
 
