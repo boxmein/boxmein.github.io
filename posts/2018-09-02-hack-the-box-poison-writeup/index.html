@@ -1,19 +1,20 @@
-<!doctype html><html><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><title>Hack The Box: Poison - Writeup - boxmein</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="NOTE: we did that in CyberCamp 2018. Just re-solving it. IP: 10.10.10.84
+<!doctype html><html><head lang=en><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>Hack The Box: Poison - Writeup - boxmein</title><meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="NOTE: we did that in CyberCamp 2018. Just re-solving it. IP: 10.10.10.84
 nmap Scanning 10.10.10.84 [65536 ports] Discovered open port 80/tcp on 10.10.10.84 Discovered open port 22/tcp on 10.10.10.84
 Web server Web server has a bunch of &ldquo;testing PHP scripts&rdquo;.
 One of the scripts is called listfiles.php, which lists the folder.
 Among the PHP files there&rsquo;s also a file called pwdbackup.txt:
-This password is secure, it's encoded atleast 13 times.. what could go wrong really."><meta property="og:image" content><meta property="og:title" content="Hack The Box: Poison - Writeup"><meta property="og:description" content="NOTE: we did that in CyberCamp 2018. Just re-solving it. IP: 10.10.10.84
+This password is secure, it's encoded atleast 13 times.. what could go wrong really."><meta property="og:image" content><meta property="og:url" content="https://boxmein.github.io/posts/2018-09-02-hack-the-box-poison-writeup/"><meta property="og:site_name" content="boxmein"><meta property="og:title" content="Hack The Box: Poison - Writeup"><meta property="og:description" content="NOTE: we did that in CyberCamp 2018. Just re-solving it. IP: 10.10.10.84
 nmap Scanning 10.10.10.84 [65536 ports] Discovered open port 80/tcp on 10.10.10.84 Discovered open port 22/tcp on 10.10.10.84
-Web server Web server has a bunch of &ldquo;testing PHP scripts&rdquo;.
+Web server Web server has a bunch of “testing PHP scripts”.
 One of the scripts is called listfiles.php, which lists the folder.
-Among the PHP files there&rsquo;s also a file called pwdbackup.txt:
-This password is secure, it's encoded atleast 13 times.. what could go wrong really."><meta property="og:type" content="article"><meta property="og:url" content="https://boxmein.github.io/posts/2018-09-02-hack-the-box-poison-writeup/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2018-09-02T00:00:00+00:00"><meta property="article:modified_time" content="2018-09-02T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Hack The Box: Poison - Writeup"><meta name=twitter:description content="NOTE: we did that in CyberCamp 2018. Just re-solving it. IP: 10.10.10.84
+Among the PHP files there’s also a file called pwdbackup.txt:
+This password is secure, it's encoded atleast 13 times.. what could go wrong really."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2018-09-02T00:00:00+00:00"><meta property="article:modified_time" content="2018-09-02T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Hack The Box: Poison - Writeup"><meta name=twitter:description content="NOTE: we did that in CyberCamp 2018. Just re-solving it. IP: 10.10.10.84
 nmap Scanning 10.10.10.84 [65536 ports] Discovered open port 80/tcp on 10.10.10.84 Discovered open port 22/tcp on 10.10.10.84
-Web server Web server has a bunch of &ldquo;testing PHP scripts&rdquo;.
+Web server Web server has a bunch of “testing PHP scripts”.
 One of the scripts is called listfiles.php, which lists the folder.
-Among the PHP files there&rsquo;s also a file called pwdbackup.txt:
-This password is secure, it's encoded atleast 13 times.. what could go wrong really."><link href=https://boxmein.github.io/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=https://boxmein.github.io/css/main.ac08a4c9714baa859217f92f051deb58df2938ec352b506df655005dcaf98cc0.css><script src=https://boxmein.github.io/posthog-tag.js></script></head><body><div class=content><header><div class=main><a href=https://boxmein.github.io/>boxmein</a></div><nav></nav></header><main><article><div class=title><h1 class=title>Hack The Box: Poison - Writeup</h1><div class=meta>Posted on Sep 2, 2018</div></div><section class=body><p>NOTE: we did that in CyberCamp 2018. Just re-solving it. IP: 10.10.10.84</p><h2 id=nmap>nmap</h2><p>Scanning 10.10.10.84 [65536 ports]
+Among the PHP files there’s also a file called pwdbackup.txt:
+This password is secure, it's encoded atleast 13 times.. what could go wrong really."><link href=https://boxmein.github.io/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=https://boxmein.github.io/css/main.5cebd7d4fb2b97856af8d32a6def16164fcf7d844e98e236fcb3559655020373.css><script src=https://boxmein.github.io/posthog-tag.js></script></head><body><div class=content><header><div class=main><a href=https://boxmein.github.io/>boxmein</a></div><nav></nav></header><main><article><div class=title><h1 class=title>Hack The Box: Poison - Writeup</h1><div class=meta>Posted on Sep 2, 2018</div></div><section class=body><p>NOTE: we did that in CyberCamp 2018. Just re-solving it. IP: 10.10.10.84</p><h2 id=nmap>nmap</h2><p>Scanning 10.10.10.84 [65536 ports]
 Discovered open port 80/tcp on 10.10.10.84
 Discovered open port 22/tcp on 10.10.10.84</p><h2 id=web-server>Web server</h2><p>Web server has a bunch of &ldquo;testing PHP scripts&rdquo;.</p><p>One of the scripts is called listfiles.php, which lists the folder.</p><p>Among the PHP files there&rsquo;s also a file called pwdbackup.txt:</p><pre tabindex=0><code>This password is secure, it&#39;s encoded atleast 13 times.. what could go wrong really..
 
@@ -87,4 +88,4 @@ eaacdfb2d141b72a589233063604209c
 </code></pre><p>Turns out the secret file is the password of the VNC server:</p><pre tabindex=0><code>root@kali# xvncviewer -passwd secret localhost:8123
 </code></pre><p>And, I am root:</p><pre tabindex=0><code>root@Poison# cat root.txt
 716d04b188419cf2bb99d891272361f5
-</code></pre></section><div class=post-tags></div></article></main><footer><div style=display:flex></div><div class=footer-info>2023 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer></div></body></html>
+</code></pre></section><div class=post-tags></div></article></main><footer><div style=display:flex></div><div class=footer-info>2024 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer></div></body></html>

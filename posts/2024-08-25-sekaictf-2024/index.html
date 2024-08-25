@@ -1,0 +1,223 @@
+<!doctype html><html><head lang=en><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>SekaiCTF 2024 writeups - boxmein</title><meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="My writeups for SekaiCTF 2024
+CalcQL Use CodeQL to find the function that returns 42.
+Author: irogir
+Nice, a chance to use CodeQL.
+Challenge Write a CodeQL query that detects functions that return 42. The CodeQL query must run on Sekai&rsquo;s challenge platform over 2 files, that are randomly generated and ~3500 lines long.
+The backend codebase and Dockerfile were provided to the participants for simplicity&rsquo;s sake, and CodeQL is available publicly if you dare to install it."><meta property="og:image" content><meta property="og:url" content="https://boxmein.github.io/posts/2024-08-25-sekaictf-2024/"><meta property="og:site_name" content="boxmein"><meta property="og:title" content="SekaiCTF 2024 writeups"><meta property="og:description" content="My writeups for SekaiCTF 2024
+CalcQL Use CodeQL to find the function that returns 42.
+Author: irogir
+Nice, a chance to use CodeQL.
+Challenge Write a CodeQL query that detects functions that return 42. The CodeQL query must run on Sekai’s challenge platform over 2 files, that are randomly generated and ~3500 lines long.
+The backend codebase and Dockerfile were provided to the participants for simplicity’s sake, and CodeQL is available publicly if you dare to install it."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-08-25T00:00:00+00:00"><meta property="article:modified_time" content="2024-08-25T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="SekaiCTF 2024 writeups"><meta name=twitter:description content="My writeups for SekaiCTF 2024
+CalcQL Use CodeQL to find the function that returns 42.
+Author: irogir
+Nice, a chance to use CodeQL.
+Challenge Write a CodeQL query that detects functions that return 42. The CodeQL query must run on Sekai’s challenge platform over 2 files, that are randomly generated and ~3500 lines long.
+The backend codebase and Dockerfile were provided to the participants for simplicity’s sake, and CodeQL is available publicly if you dare to install it."><link href=https://boxmein.github.io/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css rel=stylesheet><link rel=stylesheet type=text/css media=screen href=https://boxmein.github.io/css/main.5cebd7d4fb2b97856af8d32a6def16164fcf7d844e98e236fcb3559655020373.css><script src=https://boxmein.github.io/posthog-tag.js></script></head><body><div class=content><header><div class=main><a href=https://boxmein.github.io/>boxmein</a></div><nav></nav></header><main><article><div class=title><h1 class=title>SekaiCTF 2024 writeups</h1><div class=meta>Posted on Aug 25, 2024</div></div><section class=body><p>My writeups for SekaiCTF 2024</p><h2 id=calcql>CalcQL</h2><blockquote><p>Use CodeQL to find the function that returns 42.</p><p>Author: irogir</p></blockquote><p>Nice, a chance to use CodeQL.</p><h3 id=challenge>Challenge</h3><p>Write a CodeQL query that detects functions that return 42. The CodeQL
+query must run on Sekai&rsquo;s challenge platform over 2 files, that are
+randomly generated and ~3500 lines long.</p><p>The backend codebase and Dockerfile were provided to the participants
+for simplicity&rsquo;s sake, and CodeQL is available publicly if you dare to
+install it.</p><p>Here&rsquo;s a sample of one of those generated challenge files:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>entry_c9d32a0799c677bada16</span>():
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> fn_41b2662cc07e9d415aad() <span style=color:#f92672>+</span> fn_dc74661a89fa9d7b781c() <span style=color:#f92672>+</span> fn_a5069863a1ada4cf4f31() <span style=color:#f92672>+</span> fn_75ac78910b7fb9f71882() <span style=color:#f92672>+</span> fn_9137f86648eb1cd605c1() <span style=color:#f92672>+</span> fn_3f62afd14b26d481a243() <span style=color:#f92672>+</span> fn_1db0ac419dffc1ffbf19() <span style=color:#f92672>+</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>entry_b0a098a549a34c848bd2</span>():
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> fn_b3e40891831cb0d37873() <span style=color:#f92672>+</span> fn_1f2290ad8a4960f0965b() <span style=color:#f92672>+</span> fn_a7cf0d75d6e192bcb819() <span style=color:#f92672>+</span> fn_f7037d3e4977b7e94d1c() <span style=color:#f92672>+</span> fn_3d1903c8851663911b6f() <span style=color:#f92672>+</span> fn_589da486391aaea98883() <span style=color:#f92672>+</span> fn_06311901fd087a41787b() <span style=color:#f92672>+</span> fn_19fb39766eeca40a2b07() <span style=color:#f92672>+</span> fn_20859e1436314cf04f76() <span style=color:#f92672>+</span> <span style=color:#ae81ff>5</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>fn_7c4eb1a35da5224979b0</span>():
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> fn_1727ecb33f8b858b5175() <span style=color:#f92672>+</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> fn_3f62afd14b26d481a243() <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>...</span>
+</span></span></code></pre></div><h3 id=solution>Solution</h3><p>This is the solution that printed the flag in the live environment
+around 30 seconds after the end time. Not because it was slow or
+anything, just we got it working 5 minutes before the end of the CTF.</p><pre tabindex=0><code class=language-codeql data-lang=codeql>/**
+ * Alerts on functions that return 42 and whose name starts with &#34;entry_&#34;.
+ *
+ * Assumes that:
+ * - your functions are one-liners with a return statement
+ * - your return statement&#39;s inner expression is a binary expression
+ * - binary expressions are all add expressions
+ * - operands are either function call expressions without indirection, other binary expressions, or integer literals
+ *
+ * @name summer2
+ * @kind problem
+ * @problem.severity warning
+ * @id python/example/hello-world
+ */
+
+import python
+
+int value(Expr e) {
+  e instanceof IntegerLiteral and result = e.(IntegerLiteral).getValue()
+  or
+  e instanceof BinaryExpr and
+  e.(BinaryExpr).getOp() instanceof Add and
+  result = value(e.(BinaryExpr).getLeft()) + value(e.(BinaryExpr).getRight())
+  or
+  e instanceof Call and
+  exists(Function f |
+    f.getName() = e.(Call).getFunc().(Name).getId() and
+    result = value(f.getBody().getItem(0).(Return).getASubExpression())
+  )
+}
+
+from Function g
+where
+  value(g.getBody().getItem(0).(Return).getASubExpression()) = 42 and
+  g.getName().matches(&#34;entry_%&#34;)
+select g, &#34;called &#34; + g.getName()
+</code></pre><p>Now, before arriving at the solution, here&rsquo;s where we started:</p><h3 id=setting-up-vs-code-to-run-codeql>Setting up VS Code to run CodeQL</h3><ol><li>Install the CodeQL VS Code extension</li><li>Write a small python test file with a few simple function definitions</li><li>Run <code>CodeQL: Create query</code></li><li>It triggers an internal installation of CodeQL - use it</li><li>Find the path of ^ above CodeQL and use it to generate a code database into a nearby folder</li><li>Right click the folder in the file browser and select <code>CodeQL: Set current database</code></li><li>Run <code>CodeQL: Create query</code> again</li><li>See that it dumps some files and an <code>example.ql</code> inside</li><li>Open <code>example.ql</code>, type Cmd-Shift-P and run <code>CodeQL: Run query on selected database</code></li></ol><p>Hey presto, it executes!</p><p>Use the CodeQL side button in the left sidebar to get about 20% of an ergonomic query editor.</p><h3 id=editing-the-query>Editing the query</h3><p>There are 2 types of queries that you can try for this challenge: queries, and path queries.
+Queries look like logic programming meets SQL, and execute over the AST.</p><p>Path queries look similar but execute over the data flow graph. Importantly, path queries
+are <em>not</em> the fit here - they can easily find you whether a start and end point meet, but
+will not easily give you the path between them.</p><p>Throughout the challenge, you have to remember that this is a predicate logic based language, so
+think of the entire system as a &ldquo;narrowing down&rdquo; of the possible values a variable can have.
+It also helps to go iteratively, as the way to search some things can be quite upside down
+when compared to &ldquo;normal programming&rdquo;.</p><p>Here&rsquo;s the first try to get something working and test the IDE. Read it like this:</p><ol><li>Look at all possible statements in the code file</li></ol><ul><li>Keep only statements that are instanceof Return</li><li>=> goes into variable <code>s</code></li></ul><ol start=3><li>Look at all possible integer literals</li></ol><ul><li>Keep only integer literals that are inside the aforementioned statements <code>s</code></li><li>&mldr; and whose value is 42</li></ul><ol start=4><li>Keep only such Return statements where we found one of those integer literals inside</li><li>Return 2 columns: (1) the code fragment that matched the alert, and (2) a message to go with it</li></ol><pre tabindex=0><code class=language-codeql data-lang=codeql>/**
+ * This is an automatically generated file
+ *
+ * @name Hello world
+ * @kind problem
+ * @problem.severity warning
+ * @id python/example/hello-world
+ */
+
+import python
+
+from Stmt s
+where
+  s instanceof Return and
+  exists(IntegerLiteral i | s.contains(i) and i.getValue() = 42)
+select s, &#34;lol found it&#34;
+</code></pre><p>Moving on, the next thing was to try and build a predicate logic function
+that can evaluate those expressions. The VS Code CodeQL AST viewer can help a bit,
+but it doesn&rsquo;t reload automatically when the source file changes.</p><ol><li>Open a CodeQL file</li><li>Make it return at least 1 finding</li><li>Run the query on the current database</li><li>Click on the location of the finding in the CodeQL Query Results pane</li><li>You are now viewing a copy of the original script, mounted from a zip file</li><li>You can only run Cmd-Shift-P <code>CodeQL: View AST</code> on these mounted zipped source files</li><li>Now the left panel &ldquo;AST Viewer&rdquo; works</li><li>If you change the source file, you have to delete and regenerate the database, and
+run <code>CodeQL: Restart query server</code>, and click the clear button on the AST view. It sometimes
+still doesn&rsquo;t work.</li></ol><p>This next one works but doesn&rsquo;t resolve function calls. Almost there.</p><pre tabindex=0><code class=language-codeql data-lang=codeql>/**
+ * This is an automatically generated file
+ *
+ * @name summer
+ * @kind problem
+ * @problem.severity warning
+ * @id python/example/hello-world
+ */
+
+import python
+import semmle.python.dataflow.new.DataFlow
+
+int value(Expr e) {
+  if e instanceof IntegerLiteral
+  then result = e.(IntegerLiteral).getValue()
+  else
+    if e instanceof BinaryExpr and e.(BinaryExpr).getOp() instanceof Add
+    then result = value(e.(BinaryExpr).getLeft()) + value(e.(BinaryExpr).getRight())
+    else
+      if e instanceof Call
+      then result = 999
+      else result = 0
+}
+
+from DataFlow::Node input
+where
+  input.asExpr().(BinaryExpr).getOp() instanceof Add and
+  value(input.asExpr()) = 42
+select input.asExpr(), &#34;This is a binary addition expression.&#34;
+</code></pre><p>After some attempts, it was possible to break the problem down to individual steps.</p><h3 id=evaluating-a-binaryexpr>Evaluating a BinaryExpr</h3><p>This can be done simply by a recursive value-returning predicate:</p><pre tabindex=0><code class=language-codeql data-lang=codeql>// BinaryExpr
+//    Op (Add, ...)
+//    Left
+//       Expr
+//    Right
+//       Expr
+int value(Expr e) {
+  e instanceof IntegerLiteral and result = e.(IntegerLiteral).getValue()
+  or
+  e instanceof BinaryExpr and
+  e.(BinaryExpr).getOp() instanceof Add and
+  result = value(e.(BinaryExpr).getLeft()) + value(e.(BinaryExpr).getRight())
+  // Function calls...??? Read more!
+}
+</code></pre><h3 id=getting-the-return-expression-of-a-function>Getting the Return Expression of a Function</h3><p>This was tricky and makes a lot of assumptions but it worked fine for the chall:</p><pre tabindex=0><code class=language-codeql data-lang=codeql>// Function f
+//    Body
+//      Stmt[]
+//        [0]
+//          Return
+//             [Expr]
+f.getBody().getItem(0).(Return).getASubExpression()
+</code></pre><h3 id=converting-a-function-call-to-a-function>Converting a Function Call to a Function</h3><p>Took a while to figure out how to make function calls work in a
+quick and dirty way:</p><ul><li>a <code>Call</code> node appears to consist of a <code>Name</code> node and a <code>Arguments</code> node</li><li><code>e.(Call).getFunc()</code> gives you the <code>Name</code> of the function, as a type <code>Expr</code> so you need to downcast</li><li>In Python mode, you can&rsquo;t dig through a call expression to the function it is referring to.</li><li>Even <code>pointsTo</code> didn&rsquo;t help much sadly, not sure why it didn&rsquo;t work.</li><li>Maybe we can look at all functions, get their names, and look at the call expression and figure out what
+the name of the function is, and put the two together?</li></ul><p>Here&rsquo;s how this clause could look like:</p><pre tabindex=0><code class=language-codeql data-lang=codeql>exists(Function f |
+  f.getName() = e.(Call).getFunc().(Name).getId()
+)
+</code></pre><h3 id=putting-it-all-together>Putting it all together</h3><p>Now how to make it useful for us? It is possible to assign a result of a predicate inside
+the aggregate clause for some reason. This lets us write the 3rd clause for our value() function:</p><pre tabindex=0><code class=language-codeql data-lang=codeql>int value(Expr e) {
+  //
+  // Integer literals - easy
+  e instanceof IntegerLiteral and result = e.(IntegerLiteral).getValue()
+  or
+  //
+  // Binary expressions - left + right
+  e instanceof BinaryExpr and
+  e.(BinaryExpr).getOp() instanceof Add and
+  result = value(e.(BinaryExpr).getLeft()) + value(e.(BinaryExpr).getRight())
+  or
+  //
+  // Call expressions - a bit cursed
+  // &#34;func2()&#34; == Call { Name { getId() = &#34;func2&#34; } }
+  // &#34;def func2(): return 2 + 3&#34; == Function { getName() = &#34;func2&#34;, Body { Stmt[0] { Return { Expr ... } } } }
+  e instanceof Call and
+  exists(Function f |
+    f.getName() = e.(Call).getFunc().(Name).getId() and
+    result = value(f.getBody().getItem(0).(Return).getASubExpression())
+  )
+}
+</code></pre><p>And now nothing left to do than to utilise this function in our query.</p><pre tabindex=0><code class=language-query data-lang=query>// find all functions
+from Function g
+where
+  // get the return statement,
+  // calculate the value,
+  // check if it&#39;s 42
+  // and that the function name matches entry_...
+  value(g.getBody().getItem(0).(Return).getASubExpression()) = 42 and
+  g.getName().matches(&#34;entry_%&#34;)
+select g, &#34;called &#34; + g.getName()
+</code></pre><p>The challenge check scripts were generating 2 arbitrary Python scripts
+on boot, and allowed you to upload a CodeQL file that would be run over these scripts.
+The CodeQL file was supposed to output a list of locations where the query matched,
+and the right function name would trigger the flag to be displayed.</p><h3 id=summary>Summary</h3><p>A brain bending challenge for sure, due to the logic programming involved. Probably not
+the best fit to coerce Java-like syntax onto a logic programming language, but after
+getting over the initial hump, it was a fun challenge to solve.</p><p>Also, CodeQL will come in handy as a skill in the future.</p><h3 id=bonus-content>Bonus content</h3><p>The right way to find out that path queries are not the right fit: make one, and try
+to coerce it to work.</p><p>In any case, you can use this as a template to analyze data flow. It alerts you when
+an integer literal flows into a function named &ldquo;entry_%&rdquo;. :)</p><p>The plan was to compute the data flow graph, hope that it &ldquo;looks through&rdquo; function calls,
+and walk the graph backwards summing up all the integers. Turns out you can&rsquo;t ask for the
+path between <code>source</code> and <code>sink</code> like that.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>/**</span>
+</span></span><span style=display:flex><span> <span style=color:#f92672>*</span> This <span style=color:#f92672>is</span> an automatically generated file
+</span></span><span style=display:flex><span> <span style=color:#f92672>*</span>
+</span></span><span style=display:flex><span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>@name</span> summer2
+</span></span><span style=display:flex><span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>@kind</span> path<span style=color:#f92672>-</span>problem
+</span></span><span style=display:flex><span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>@problem.severity</span> warning
+</span></span><span style=display:flex><span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>@id</span> python<span style=color:#f92672>/</span>example<span style=color:#f92672>/</span>hello<span style=color:#f92672>-</span>world
+</span></span><span style=display:flex><span> <span style=color:#f92672>*/</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> python
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> semmle.python.dataflow.new.DataFlow
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> semmle.python.dataflow.new.TaintTracking
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> semmle.python.dataflow.new.RemoteFlowSources
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> semmle.python.Concepts
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>private module MyConfig implements DataFlow::ConfigSig {
+</span></span><span style=display:flex><span>  predicate isSource(DataFlow::Node source) {
+</span></span><span style=display:flex><span>    source<span style=color:#f92672>.</span>asExpr()<span style=color:#f92672>.</span>isConstant() <span style=color:#f92672>and</span> source<span style=color:#f92672>.</span>asExpr() instanceof IntegerLiteral
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  predicate isSink(DataFlow::Node sink) {
+</span></span><span style=display:flex><span>    exists(Function f <span style=color:#f92672>|</span> f<span style=color:#f92672>.</span>getName()<span style=color:#f92672>.</span>matches(<span style=color:#e6db74>&#34;entry_%&#34;</span>) <span style=color:#f92672>and</span> f<span style=color:#f92672>.</span>contains(sink<span style=color:#f92672>.</span>asExpr())) <span style=color:#f92672>and</span>
+</span></span><span style=display:flex><span>    sink<span style=color:#f92672>.</span>asExpr()<span style=color:#f92672>.</span>getParent() instanceof Return
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>module Flow <span style=color:#f92672>=</span> DataFlow::Global<span style=color:#f92672>&lt;</span>MyConfig<span style=color:#f92672>&gt;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> Flow::PathGraph
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> Flow::PathNode source, Flow::PathNode sink
+</span></span><span style=display:flex><span>where Flow::flowPath(source, sink)
+</span></span><span style=display:flex><span>select sink<span style=color:#f92672>.</span>getNode(), source, sink, <span style=color:#e6db74>&#34;&lt;message&gt;&#34;</span>
+</span></span></code></pre></div></section><div class=post-tags></div></article></main><footer><div style=display:flex></div><div class=footer-info>2024 <a href=https://github.com/athul/archie>Archie Theme</a> | Built with <a href=https://gohugo.io>Hugo</a></div></footer></div></body></html>
