@@ -306,3 +306,51 @@ the best fit to coerce Java-like syntax onto a logic programming language, but a
 getting over the initial hump, it was a fun challenge to solve.
 
 Also, CodeQL will come in handy as a skill in the future.
+
+### Bonus content
+
+The right way to find out that path queries are not the right fit: make one, and try
+to coerce it to work.
+
+In any case, you can use this as a template to analyze data flow. It alerts you when
+an integer literal flows into a function named "entry_%". :)
+
+The plan was to compute the data flow graph, hope that it "looks through" function calls,
+and walk the graph backwards summing up all the integers. Turns out you can't ask for the
+path between `source` and `sink` like that.
+
+```python
+/**
+ * This is an automatically generated file
+ *
+ * @name summer2
+ * @kind path-problem
+ * @problem.severity warning
+ * @id python/example/hello-world
+ */
+
+import python
+import semmle.python.dataflow.new.DataFlow
+import semmle.python.dataflow.new.TaintTracking
+import semmle.python.dataflow.new.RemoteFlowSources
+import semmle.python.Concepts
+
+private module MyConfig implements DataFlow::ConfigSig {
+  predicate isSource(DataFlow::Node source) {
+    source.asExpr().isConstant() and source.asExpr() instanceof IntegerLiteral
+  }
+
+  predicate isSink(DataFlow::Node sink) {
+    exists(Function f | f.getName().matches("entry_%") and f.contains(sink.asExpr())) and
+    sink.asExpr().getParent() instanceof Return
+  }
+}
+
+module Flow = DataFlow::Global<MyConfig>;
+
+import Flow::PathGraph
+
+from Flow::PathNode source, Flow::PathNode sink
+where Flow::flowPath(source, sink)
+select sink.getNode(), source, sink, "<message>"
+```
